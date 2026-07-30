@@ -56,26 +56,27 @@ graph TD
 Init-nextjs-app/
 ├── .github/workflows/         # Pipeline CI GitHub Actions
 │   └── ci.yml                 # Alur otomatis Lint & Build
-├── app/                       # Next.js App Router (Semua Rute)
-│   ├── [lang]/                # Segmentasi Bahasa Dinamis (i18n)
-│   │   ├── demo-encryption/   # Fitur & Tampilan Demo Keamanan ID
-│   │   │   ├── actions.ts     # Server Actions (use server)
-│   │   │   ├── DemoClient.tsx # Komponen Interaktif Klien
-│   │   │   └── page.tsx       # Halaman utama demo (Server Component)
-│   │   ├── dictionaries.ts    # Pemuat berkas i18n
-│   │   ├── layout.tsx         # Layout i18n dengan metadata SEO
-│   │   └── page.tsx           # Halaman Utama
-│   ├── globals.css            # Pengaturan CSS & Tema Tailwind v4
-│   ├── manifest.ts            # Manifest PWA
-│   └── sw.ts                  # Skrip Service Worker (Serwist)
-├── dictionaries/              # Berkas Terjemahan Bahasa (JSON)
-│   ├── id.json                # Bahasa Indonesia (Bawaan)
-│   └── en.json                # Bahasa Inggris
-├── lib/                       # Utilitas Pendukung Bersama
-│   ├── crypto.ts              # Modul enkripsi AES-256-GCM (Server-Only)
-│   ├── obfuscator.ts          # Modul penyamaran ID Sqids
-│   └── seo.ts                 # Utilitas JSON-LD & SEO
-├── proxy.ts                   # Pendeteksi locale & pengarah otomatis (ganti Middleware)
+├── src/                       # 📂 Semua Source Code Utama
+│   ├── app/                   # Next.js App Router (Semua Rute)
+│   │   ├── [lang]/            # Segmentasi Bahasa Dinamis (i18n)
+│   │   │   ├── demo-encryption/# Fitur & Tampilan Demo Keamanan ID
+│   │   │   │   ├── actions.ts # Server Actions (use server)
+│   │   │   │   ├── DemoClient.tsx # Komponen Interaktif Klien
+│   │   │   │   └── page.tsx   # Halaman utama demo (Server Component)
+│   │   │   ├── dictionaries.ts# Pemuat berkas i18n
+│   │   │   ├── layout.tsx     # Layout i18n dengan metadata SEO
+│   │   │   └── page.tsx       # Halaman Utama
+│   │   ├── globals.css        # Pengaturan CSS & Tema Tailwind v4
+│   │   ├── manifest.ts        # Manifest PWA
+│   │   └── sw.ts              # Skrip Service Worker (Serwist)
+│   ├── dictionaries/          # Berkas Terjemahan Bahasa (JSON)
+│   │   ├── id.json            # Bahasa Indonesia (Bawaan)
+│   │   └── en.json            # Bahasa Inggris
+│   ├── lib/                   # Utilitas Pendukung Bersama
+│   │   ├── crypto.ts          # Modul enkripsi AES-256-GCM (Server-Only)
+│   │   ├── obfuscator.ts      # Modul penyamaran ID Sqids
+│   │   └── seo.ts             # Utilitas JSON-LD & SEO
+│   └── proxy.ts               # Pendeteksi locale & pengarah otomatis (ganti Middleware)
 ├── .env                       # Variabel environment umum
 ├── .env.development            # Konfigurasi dev lokal (tidak di-commit)
 ├── .env.production             # Konfigurasi produksi (tanpa rahasia)

@@ -42,24 +42,25 @@
 
 ```
 Init-nextjs-app/
-├── app/                        # Next.js App Router
-│   ├── layout.tsx              # Root layout (minimal wrapper)
-│   ├── globals.css             # Global styles + Tailwind config
-│   ├── manifest.ts             # PWA manifest
-│   ├── sw.ts                   # Service Worker (Serwist)
-│   ├── favicon.ico
-│   └── [lang]/                 # 🌐 Dynamic locale segment
-│       ├── layout.tsx          # Locale-aware layout (html lang, metadata)
-│       ├── page.tsx            # Homepage (i18n)
-│       └── dictionaries.ts    # Dictionary loader (server-only)
-├── i18n/                       # i18n configuration
-│   └── config.ts              # Locale list & types
-├── lib/                        # Shared utilities
-│   └── seo.ts                 # SEO helpers
-├── dictionaries/               # Translation files
-│   ├── id.json                # 🇮🇩 Bahasa Indonesia (default)
-│   └── en.json                # 🇬🇧 English
-├── proxy.ts                    # Locale detection & redirect (replaces middleware)
+├── src/                        # 📂 All source code disatukan di dalam src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── layout.tsx          # Root layout (minimal wrapper)
+│   │   ├── globals.css         # Global styles + Tailwind config
+│   │   ├── manifest.ts         # PWA manifest
+│   │   ├── sw.ts               # Service Worker (Serwist)
+│   │   ├── favicon.ico
+│   │   └── [lang]/             # 🌐 Dynamic locale segment
+│   │       ├── layout.tsx      # Locale-aware layout (html lang, metadata)
+│   │       ├── page.tsx        # Homepage (i18n)
+│   │       └── dictionaries.ts# Dictionary loader (server-only)
+│   ├── i18n/                   # i18n configuration
+│   │   └── config.ts          # Locale list & types
+│   ├── lib/                    # Shared utilities
+│   │   └── seo.ts             # SEO helpers
+│   ├── dictionaries/           # Translation files
+│   │   ├── id.json            # 🇮🇩 Bahasa Indonesia (default)
+│   │   └── en.json            # 🇬🇧 English
+│   └── proxy.ts                # Locale detection & redirect (replaces middleware)
 ├── public/                     # Static assets
 ├── prompt_ai/                  # AI prompt templates (bukan source code)
 ├── .env                        # Common env (semua environment)
@@ -174,8 +175,8 @@ import { SomeComponent } from "../../../_components/some-component";
 
 ### Setup:
 - **Serwist v9** untuk Service Worker
-- `app/sw.ts` — Service Worker source
-- `app/manifest.ts` — Web App Manifest
+- `src/app/sw.ts` — Service Worker source
+- `src/app/manifest.ts` — Web App Manifest
 - PWA di-disable saat development (`next.config.ts`)
 
 ### Aturan:
@@ -190,7 +191,7 @@ import { SomeComponent } from "../../../_components/some-component";
 
 ### Arsitektur:
 Project ini menggunakan **native Next.js 16 i18n** dengan pattern:
-- **`[lang]` dynamic segment** — Semua route ada di `app/[lang]/`
+- **`[lang]` dynamic segment** — Semua route ada di `src/app/[lang]/`
 - **`proxy.ts`** — Menggantikan `middleware.ts` (deprecated di Next.js 16) untuk deteksi locale dan redirect
 - **Dictionary pattern** — JSON files untuk translations, loaded server-side
 
@@ -202,11 +203,11 @@ Project ini menggunakan **native Next.js 16 i18n** dengan pattern:
 
 ### File Structure:
 ```
-i18n/config.ts            # Locale list & Locale type
-dictionaries/id.json       # Translations (ID)
-dictionaries/en.json       # Translations (EN)
-app/[lang]/dictionaries.ts # Dictionary loader (server-only)
-proxy.ts                   # Locale detection & redirect
+src/i18n/config.ts            # Locale list & Locale type
+src/dictionaries/id.json       # Translations (ID)
+src/dictionaries/en.json       # Translations (EN)
+src/app/[lang]/dictionaries.ts # Dictionary loader (server-only)
+src/proxy.ts                   # Locale detection & redirect
 ```
 
 ### Cara Menggunakan di Server Component:
