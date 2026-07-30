@@ -60,7 +60,7 @@ Init-nextjs-app/
 │   │   └── seo.ts             # SEO helpers
 │   ├── dictionaries/           # Translation files
 │   │   ├── id.json            # 🇮🇩 Bahasa Indonesia (default)
-│   │   └── en.json            # 🇬🇧 English
+│   │   └── en.json            # 🇺🇸 English
 │   └── proxy.ts                # Pass-through middleware proxy
 ├── public/                     # Static assets
 ├── prompt_ai/                  # AI prompt templates (bukan source code)
@@ -147,26 +147,36 @@ import { SomeComponent } from "../../../_components/some-component";
 
 ---
 
-## 6. Styling — Tailwind CSS v4
+## 6. Styling — Tailwind CSS v4 & Theming
 
 ### Setup yang sudah ada:
 - `globals.css` menggunakan `@import "tailwindcss"` (Tailwind v4 syntax)
-- CSS variables untuk theming (`--background`, `--foreground`)
-- `@theme inline` block untuk custom design tokens
-- Dark mode via `prefers-color-scheme`
+- `@variant dark (&:where(.dark, .dark *));` untuk class-based dark mode di Tailwind v4
+- Standard CSS variables & design tokens untuk `:root` (Light Theme) dan `.dark` (Dark Theme):
+  - `--background`, `--foreground`, `--card`, `--primary`, `--secondary`, `--muted`, `--accent`, `--border`, `--ring`, dll.
+- `@theme inline` block untuk memetakan token ke class Tailwind (`bg-background`, `text-foreground`, `bg-primary`, `border-border`, dll.)
+- `<ThemeProvider>` via `next-themes` (`attribute="class"`, `defaultTheme="system"`) untuk pengubahan tema tanpa FOUC
+- Komponen `ThemeSwitcher` (`src/app/_components/theme-switcher.tsx`) untuk memilih tema (Light ☀️, Dark 🌙, System 💻)
 
 ### Aturan:
 - **Gunakan Tailwind classes** — Hindari inline style
 - **Gunakan CSS variables** di `@theme inline` untuk custom values
-- **Dark mode** harus selalu di-support
+- **Dark mode** harus selalu di-support di semua komponen UI
 - **Responsive design** — Mobile-first approach (`sm:`, `md:`, `lg:`)
 - **JANGAN** install Tailwind plugins tanpa konfirmasi user
 
 ```css
 /* ✅ Tambah design token baru di globals.css */
+:root {
+  --custom-color: #ffffff;
+}
+
+.dark {
+  --custom-color: #000000;
+}
+
 @theme inline {
-  --color-primary: #your-color;
-  --color-background: var(--background);
+  --color-custom: var(--custom-color);
 }
 ```
 
@@ -201,7 +211,7 @@ Project ini menggunakan **Cookie & Localization-based i18n** tanpa meletakkan lo
 | Locale | Bahasa              | Default |
 | ------ | ------------------- | ------- |
 | `id`   | 🇮🇩 Bahasa Indonesia | ✅ Ya   |
-| `en`   | 🇬🇧 English          | ❌ Tidak|
+| `en`   | 🇺🇸 English          | ❌ Tidak|
 
 ### File Structure:
 ```

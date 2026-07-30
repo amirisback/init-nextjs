@@ -24,6 +24,12 @@
     "menu": "Menu",
     "language": "Bahasa"
   },
+  "theme": {
+    "label": "Tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "system": "Sistem"
+  },
   "home": {
     "title": "Selamat Datang",
     "subtitle": "Untuk memulai, edit file page.tsx.",

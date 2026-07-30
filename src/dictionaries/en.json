@@ -24,6 +24,12 @@
     "menu": "Menu",
     "language": "Language"
   },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
   "home": {
     "title": "Welcome",
     "subtitle": "To get started, edit the page.tsx file.",

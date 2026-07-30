@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getCurrentLocale, getCurrentDictionary } from "@/lib/i18n-server";
 import { generatePageSeo, generateOrganizationJsonLd } from "@/lib/seo";
+import { ThemeProvider } from "./providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -38,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -56,6 +57,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
@@ -67,7 +69,16 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

@@ -47,9 +47,9 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
             ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs scale-[1.02]"
             : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
         } ${isPending ? "opacity-60 cursor-wait" : ""}`}
-        aria-label="English"
+        aria-label="English (US)"
       >
-        <span>🇬🇧</span>
+        <span>🇺🇸</span>
         <span>EN</span>
       </button>
     </div>
