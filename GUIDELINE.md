@@ -44,23 +44,24 @@
 Init-nextjs-app/
 ├── src/                        # 📂 All source code disatukan di dalam src/
 │   ├── app/                    # Next.js App Router
-│   │   ├── layout.tsx          # Root layout (minimal wrapper)
+│   │   ├── layout.tsx          # Root layout (html lang, metadata)
+│   │   ├── page.tsx            # Homepage (i18n)
 │   │   ├── globals.css         # Global styles + Tailwind config
 │   │   ├── manifest.ts         # PWA manifest
 │   │   ├── sw.ts               # Service Worker (Serwist)
 │   │   ├── favicon.ico
-│   │   └── [lang]/             # 🌐 Dynamic locale segment
-│   │       ├── layout.tsx      # Locale-aware layout (html lang, metadata)
-│   │       ├── page.tsx        # Homepage (i18n)
-│   │       └── dictionaries.ts# Dictionary loader (server-only)
+│   │   └── _components/        # App-wide UI components (e.g. LanguageSwitcher)
 │   ├── i18n/                   # i18n configuration
 │   │   └── config.ts          # Locale list & types
 │   ├── lib/                    # Shared utilities
+│   │   ├── dictionaries.ts    # Dictionary loader (server-only)
+│   │   ├── i18n-server.ts     # Cookie-based locale retriever (server-only)
+│   │   ├── i18n-actions.ts    # Server action for changing locale cookie
 │   │   └── seo.ts             # SEO helpers
 │   ├── dictionaries/           # Translation files
 │   │   ├── id.json            # 🇮🇩 Bahasa Indonesia (default)
 │   │   └── en.json            # 🇬🇧 English
-│   └── proxy.ts                # Locale detection & redirect (replaces middleware)
+│   └── proxy.ts                # Pass-through middleware proxy
 ├── public/                     # Static assets
 ├── prompt_ai/                  # AI prompt templates (bukan source code)
 ├── .env                        # Common env (semua environment)
@@ -77,8 +78,8 @@ Init-nextjs-app/
 ```
 
 ### Konvensi Penamaan Folder Baru:
-- **Feature/Module** → `app/[lang]/(group)/feature-name/`
-- **Components** → `app/[lang]/_components/` atau co-locate
+- **Feature/Module** → `app/(group)/feature-name/`
+- **Components** → `app/_components/` atau co-locate
 - **Hooks** → `app/_hooks/` atau co-locate dengan feature
 - **Utils/Lib** → `lib/` di root
 - **Types** → `types/` di root atau co-locate
@@ -190,10 +191,11 @@ import { SomeComponent } from "../../../_components/some-component";
 ## 8. Internationalization (i18n)
 
 ### Arsitektur:
-Project ini menggunakan **native Next.js 16 i18n** dengan pattern:
-- **`[lang]` dynamic segment** — Semua route ada di `src/app/[lang]/`
-- **`proxy.ts`** — Menggantikan `middleware.ts` (deprecated di Next.js 16) untuk deteksi locale dan redirect
-- **Dictionary pattern** — JSON files untuk translations, loaded server-side
+Project ini menggunakan **Cookie & Localization-based i18n** tanpa meletakkan locale di URL path:
+- **Tanpa prefix routing (`[lang]`)** — URL tetap bersih (`/`, `/about`, `/demo-encryption`).
+- **Cookie `NEXT_LOCALE`** — Menyimpan preferensi bahasa pengguna (`id` atau `en`).
+- **`i18n-server.ts`** — Helper server-side untuk membaca cookie `NEXT_LOCALE` dan memuat dictionary terkait.
+- **`LanguageSwitcher`** — Komponen UI client untuk mengubah bahasa via Server Action `setLocaleAction()`.
 
 ### Locales:
 | Locale | Bahasa              | Default |
@@ -206,21 +208,18 @@ Project ini menggunakan **native Next.js 16 i18n** dengan pattern:
 src/i18n/config.ts            # Locale list & Locale type
 src/dictionaries/id.json       # Translations (ID)
 src/dictionaries/en.json       # Translations (EN)
-src/app/[lang]/dictionaries.ts # Dictionary loader (server-only)
-src/proxy.ts                   # Locale detection & redirect
+src/lib/dictionaries.ts        # Dictionary loader (server-only)
+src/lib/i18n-server.ts        # Server locale & dictionary fetcher
+src/lib/i18n-actions.ts       # Server Action for setting locale cookie
+src/app/_components/language-switcher.tsx # UI Switcher Component
 ```
 
 ### Cara Menggunakan di Server Component:
 ```typescript
-import { notFound } from "next/navigation";
-import { getDictionary, hasLocale } from "./dictionaries";
+import { getCurrentDictionary } from "@/lib/i18n-server";
 
-export default async function Page({ params }: PageProps<"/[lang]">) {
-  const { lang } = await params;
-
-  if (!hasLocale(lang)) notFound();
-
-  const dict = await getDictionary(lang);
+export default async function Page() {
+  const { locale, dict } = await getCurrentDictionary();
 
   return <h1>{dict.home.title}</h1>;
 }
@@ -234,15 +233,14 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
 ### Cara Menambahkan Locale Baru:
 1. Update `i18n/config.ts` — tambahkan locale ke array `locales`
 2. Buat file `dictionaries/{locale}.json` dengan semua key yang sama
-3. Update `app/[lang]/dictionaries.ts` — tambahkan import baru
-4. Update `proxy.ts` matcher jika perlu
+3. Update `lib/dictionaries.ts` — tambahkan import baru
 
 ### ⚠️ Aturan i18n:
-- **Semua route HARUS** ada di bawah `app/[lang]/`
-- **Gunakan `PageProps<"/[lang]">`** dan `LayoutProps<"/[lang]">` untuk typing
-- **Selalu validasi locale** dengan `hasLocale()` + `notFound()`
+- **TIDAK PERLU** membuat folder `app/[lang]/`
+- **Gunakan `getCurrentDictionary()`** pada Server Components untuk mengambil `locale` dan `dict`
 - **Dictionary hanya di server** — gunakan `import "server-only"` 
 - **JANGAN** import dictionary di client component — pass translations sebagai props
+
 
 ---
 
@@ -342,10 +340,10 @@ style(ui): adjust header spacing
 7. **Tambahkan metadata** di setiap halaman baru
 8. **Update `.env.example`** jika menambah env variable baru
 9. **Tambahkan translations** di kedua locale file (`id.json` & `en.json`)
-10. **Buat semua route** di bawah `app/[lang]/`
+10. **Gunakan `getCurrentDictionary()`** dari `@/lib/i18n-server` di Server Component
 11. **Gunakan `next/image`** (`Image` component dari `next/image`) untuk semua gambar di component React/Next.js
 12. **Gunakan Flat Routing + SearchParams** saat membutuhkan ID atau state dari halaman/segmen sebelumnya.
-13. **⚠️ WAJIB HAPUS rute demo (`app/[lang]/demo-encryption/`)** saat mulai pengerjaan web riil agar rute demo ini tidak masuk ke build produksi.
+13. **⚠️ WAJIB HAPUS rute demo (`app/demo-encryption/`)** saat mulai pengerjaan web riil agar rute demo ini tidak masuk ke build produksi.
 
 ### ❌ JANGAN:
 1. **JANGAN** menggunakan `pages/` directory
@@ -357,7 +355,7 @@ style(ui): adjust header spacing
 7. **JANGAN** menggunakan `any` type
 8. **JANGAN** menulis CSS inline — gunakan Tailwind classes
 9. **JANGAN** hardcode string UI — gunakan dictionary i18n
-10. **JANGAN** menggunakan `middleware.ts` — sudah deprecated, gunakan `proxy.ts`
+10. **JANGAN** membuat dynamic route `[lang]` di URL
 11. **JANGAN** menggunakan tag HTML `<img>` biasa di component React/Next.js — selalu gunakan `next/image` untuk optimasi performa dan SEO
 12. **JANGAN menggunakan Nested Dynamic Routes** yang terlalu dalam.
 13. **JANGAN menggunakan Shared Layout & React Context** untuk sekadar membagikan parameter routing antar halaman.

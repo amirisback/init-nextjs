@@ -1,11 +1,73 @@
-// Root layout — minimal wrapper
-// The actual layout with <html> and <body> is in app/[lang]/layout.tsx
-// This file exists only to satisfy Next.js App Router requirements
+import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import { getCurrentLocale, getCurrentDictionary } from "@/lib/i18n-server";
+import { generatePageSeo, generateOrganizationJsonLd } from "@/lib/seo";
+import "./globals.css";
 
-export default function RootLayout({
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale, dict } = await getCurrentDictionary();
+
+  return {
+    ...generatePageSeo({
+      title: dict.metadata.title,
+      description: dict.metadata.description,
+      locale,
+    }),
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: dict.metadata.title,
+    },
+    formatDetection: {
+      telephone: false,
+    },
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  };
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  const locale = await getCurrentLocale();
+  const organizationJsonLd = generateOrganizationJsonLd();
+
+  return (
+    <html
+      lang={locale}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <head>
+        {/* JSON-LD Structured Data — Organization */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col">{children}</body>
+    </html>
+  );
 }

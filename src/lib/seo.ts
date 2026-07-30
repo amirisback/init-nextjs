@@ -17,19 +17,12 @@ export const seoConfig = {
 } as const;
 
 /**
- * Generate locale alternates for hreflang tags
- * This tells search engines about all language versions of a page
+ * Generate canonical URL
  */
 export function generateAlternates(pathname: string) {
-  const languages: Record<string, string> = {};
-
-  for (const locale of seoConfig.locales) {
-    languages[locale] = `${seoConfig.siteUrl}/${locale}${pathname}`;
-  }
-
+  const cleanPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
   return {
-    canonical: `${seoConfig.siteUrl}/${seoConfig.defaultLocale}${pathname}`,
-    languages,
+    canonical: `${seoConfig.siteUrl}${cleanPath}`,
   };
 }
 
@@ -49,6 +42,7 @@ export function generateOgMetadata({
   pathname?: string;
   images?: string[];
 }): Metadata["openGraph"] {
+  const cleanPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
   return {
     title,
     description,
@@ -58,7 +52,7 @@ export function generateOgMetadata({
       .filter((l) => l !== locale)
       .map((l) => (l === "id" ? "id_ID" : "en_US")),
     type: "website",
-    url: `${seoConfig.siteUrl}/${locale}${pathname}`,
+    url: `${seoConfig.siteUrl}${cleanPath}`,
     images: images ?? [
       {
         url: `${seoConfig.siteUrl}/og-image.png`,
@@ -98,13 +92,13 @@ export function generateWebsiteJsonLd(locale: Locale) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: seoConfig.siteName,
-    url: `${seoConfig.siteUrl}/${locale}`,
+    url: seoConfig.siteUrl,
     inLanguage: locale === "id" ? "id-ID" : "en-US",
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${seoConfig.siteUrl}/${locale}/search?q={search_term_string}`,
+        urlTemplate: `${seoConfig.siteUrl}/search?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -143,7 +137,7 @@ export function generatePageSeo({
   images?: string[];
   noIndex?: boolean;
 }): Metadata {
-  const fullTitle = pathname === "" ? title : `${title} — ${seoConfig.siteName}`;
+  const fullTitle = pathname === "" || pathname === "/" ? title : `${title} — ${seoConfig.siteName}`;
 
   return {
     metadataBase: new URL(seoConfig.siteUrl),
@@ -154,11 +148,11 @@ export function generatePageSeo({
       : { index: true, follow: true, "max-image-preview": "large" as const, "max-snippet": -1, "max-video-preview": -1 },
     icons: {
       icon: [
-        { url: '/icon-192x192.svg', sizes: '192x192', type: 'image/svg+xml' },
-        { url: '/icon-512x512.svg', sizes: '512x512', type: 'image/svg+xml' },
+        { url: "/icon-192x192.svg", sizes: "192x192", type: "image/svg+xml" },
+        { url: "/icon-512x512.svg", sizes: "512x512", type: "image/svg+xml" },
       ],
       apple: [
-        { url: '/icon-192x192.svg', sizes: '192x192', type: 'image/svg+xml' },
+        { url: "/icon-192x192.svg", sizes: "192x192", type: "image/svg+xml" },
       ],
     },
     alternates: generateAlternates(pathname),

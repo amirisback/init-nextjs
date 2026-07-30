@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   obfuscateAction,
   deobfuscateAction,
@@ -35,10 +36,9 @@ interface DemoClientProps {
     loading: string;
     appName: string;
   };
-  lang: string;
 }
 
-export default function DemoClient({ dict, common, lang }: DemoClientProps) {
+export default function DemoClient({ dict, common }: DemoClientProps) {
   // Sqids States
   const [sqidInput, setSqidInput] = useState<string>("");
   const [sqidResult, setSqidResult] = useState<{
@@ -98,7 +98,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
   // 2. Sqids Deobfuscate
   const handleSqidDeobfuscate = async () => {
     if (!sqidInput.trim()) return;
-    
+
     setSqidLoading(true);
     const res = await deobfuscateAction(sqidInput.trim());
     setSqidLoading(false);
@@ -163,7 +163,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
 
   return (
     <div className="w-full max-w-6xl px-4 py-12 mx-auto font-sans text-zinc-900 dark:text-zinc-100">
-      
+
       {/* Header Section */}
       <div className="relative mb-12 text-center">
         <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-zinc-500/10 dark:bg-white/5 rounded-full blur-3xl -z-10" />
@@ -183,9 +183,9 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
 
         {/* 1. Obfuscation Card (Sqids) */}
         <div className="flex flex-col p-8 rounded-3xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-500/5 dark:hover:shadow-black/50 hover:border-zinc-300 dark:hover:border-zinc-700 relative overflow-hidden">
-          
+
           <div className="absolute -right-16 -top-16 w-32 h-32 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-2xl" />
-          
+
           <div className="flex items-center gap-3 mb-6">
             <div className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-2xl">
               <svg className="w-6 h-6 text-zinc-700 dark:text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,7 +217,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
               <button
                 onClick={handleSqidObfuscate}
                 disabled={sqidLoading || !sqidInput.trim()}
-                className="flex-1 py-3 px-4 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-medium rounded-2xl hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] transition-all disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2"
+                className="flex-1 py-3 px-4 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-medium rounded-2xl hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] transition-all disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
               >
                 {sqidLoading ? (
                   <span className="w-5 h-5 border-2 border-zinc-400 border-t-zinc-900 rounded-full animate-spin" />
@@ -228,7 +228,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
               <button
                 onClick={handleSqidDeobfuscate}
                 disabled={sqidLoading || !sqidInput.trim()}
-                className="flex-1 py-3 px-4 border border-zinc-200 dark:border-zinc-800 font-medium rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-950 active:scale-[0.98] transition-all disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2"
+                className="flex-1 py-3 px-4 border border-zinc-200 dark:border-zinc-800 font-medium rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-950 active:scale-[0.98] transition-all disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
               >
                 {dict.deobfuscateButton}
               </button>
@@ -250,7 +250,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
                       {sqidResult.type === "encode" ? "Encoded" : "Decoded"}
                     </span>
                   </div>
-                  
+
                   <div className="space-y-1">
                     <span className="text-xs text-zinc-400">{dict.original}:</span>
                     <p className="font-mono text-sm bg-zinc-100 dark:bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-200/40 dark:border-zinc-800/40 truncate">
@@ -266,7 +266,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
                       </p>
                       <button
                         onClick={() => handleCopy(sqidResult.processed || "", "sqid")}
-                        className="p-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-lg active:scale-95 transition-all text-zinc-500 dark:text-zinc-400"
+                        className="p-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-lg active:scale-95 transition-all text-zinc-500 dark:text-zinc-400 cursor-pointer"
                         title="Copy to clipboard"
                       >
                         {copied === "sqid" ? (
@@ -296,9 +296,9 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
 
         {/* 2. Encryption Card (AES-256-GCM) */}
         <div className="flex flex-col p-8 rounded-3xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-500/5 dark:hover:shadow-black/50 hover:border-zinc-300 dark:hover:border-zinc-700 relative overflow-hidden">
-          
+
           <div className="absolute -right-16 -top-16 w-32 h-32 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl" />
-          
+
           <div className="flex items-center gap-3 mb-6">
             <div className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-2xl">
               <svg className="w-6 h-6 text-zinc-700 dark:text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -330,7 +330,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
               <button
                 onClick={handleAesEncrypt}
                 disabled={aesLoading || !aesInput.trim()}
-                className="flex-1 py-3 px-4 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-medium rounded-2xl hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] transition-all disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2"
+                className="flex-1 py-3 px-4 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-medium rounded-2xl hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] transition-all disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
               >
                 {aesLoading ? (
                   <span className="w-5 h-5 border-2 border-zinc-400 border-t-zinc-900 rounded-full animate-spin" />
@@ -341,7 +341,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
               <button
                 onClick={handleAesDecrypt}
                 disabled={aesLoading || !aesInput.trim()}
-                className="flex-1 py-3 px-4 border border-zinc-200 dark:border-zinc-800 font-medium rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-950 active:scale-[0.98] transition-all disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2"
+                className="flex-1 py-3 px-4 border border-zinc-200 dark:border-zinc-800 font-medium rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-950 active:scale-[0.98] transition-all disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
               >
                 {dict.decryptButton}
               </button>
@@ -363,7 +363,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
                       {aesResult.type === "encrypt" ? "Encrypted" : "Decrypted"}
                     </span>
                   </div>
-                  
+
                   <div className="space-y-1">
                     <span className="text-xs text-zinc-400">{dict.original}:</span>
                     <p className="font-mono text-sm bg-zinc-100 dark:bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-200/40 dark:border-zinc-800/40 truncate">
@@ -379,7 +379,7 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
                       </p>
                       <button
                         onClick={() => handleCopy(aesResult.processed || "", "aes")}
-                        className="p-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-lg active:scale-95 transition-all text-zinc-500 dark:text-zinc-400 flex-shrink-0"
+                        className="p-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-lg active:scale-95 transition-all text-zinc-500 dark:text-zinc-400 flex-shrink-0 cursor-pointer"
                         title="Copy to clipboard"
                       >
                         {copied === "aes" ? (
@@ -410,15 +410,15 @@ export default function DemoClient({ dict, common, lang }: DemoClientProps) {
 
       {/* Back Button */}
       <div className="mt-12 text-center">
-        <a
-          href={`/${lang}`}
+        <Link
+          href="/"
           className="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           {common.back}
-        </a>
+        </Link>
       </div>
     </div>
   );
