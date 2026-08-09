@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "public/sw.js",
     "public/sw.js.map",
     "cli/**",
+    ".agents/**",
+    "prompt_ai/**",
   ]),
 ]);
 
