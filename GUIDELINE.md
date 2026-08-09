@@ -9,13 +9,14 @@
 | Key            | Value                                    |
 | -------------- | ---------------------------------------- |
 | **App Name**   | Amir App                                 |
-| **Framework**  | Next.js 16.2.6 (App Router)              |
-| **Language**   | TypeScript 6 (Strict Mode)               |
-| **Styling**    | Tailwind CSS v4.3                        |
-| **PWA**        | Serwist v9.5                             |
-| **Linting**    | ESLint v10 + eslint-config-next          |
+| **Framework**  | Next.js 16.3.0 (App Router)              |
+| **React**      | React 19.2.8                             |
+| **Language**   | TypeScript 6.0.3 (Strict Mode)           |
+| **Styling**    | Tailwind CSS v4.3.3                      |
+| **PWA**        | Serwist v9.5.12                          |
+| **Linting**    | ESLint v9.21.0 + eslint-config-next 16.3.0|
 | **Node**       | ≥ 18                                     |
-| **Package Mgr**| Bun                                      |
+| **Package Mgr**| Bun v1.3.14                              |
 
 ---
 
@@ -44,36 +45,42 @@
 Init-nextjs-app/
 ├── src/                        # 📂 All source code disatukan di dalam src/
 │   ├── app/                    # Next.js App Router
-│   │   ├── layout.tsx          # Root layout (html lang, metadata)
+│   │   ├── layout.tsx          # Root layout (html lang, metadata, ThemeProvider)
 │   │   ├── page.tsx            # Homepage (i18n)
-│   │   ├── globals.css         # Global styles + Tailwind config
+│   │   ├── globals.css         # Global styles + Tailwind config (@theme inline)
 │   │   ├── manifest.ts         # PWA manifest
 │   │   ├── sw.ts               # Service Worker (Serwist)
+│   │   ├── providers.tsx       # ThemeProvider wrapper (next-themes)
+│   │   ├── robots.ts           # Robots.txt generator
+│   │   ├── sitemap.ts          # Sitemap generator
 │   │   ├── favicon.ico
-│   │   └── _components/        # App-wide UI components (e.g. LanguageSwitcher)
+│   │   ├── _components/        # App-wide UI components (LanguageSwitcher, ThemeSwitcher)
+│   │   └── demo-encryption/    # Demo Keamanan ID (page.tsx, DemoClient.tsx, actions.ts)
 │   ├── i18n/                   # i18n configuration
 │   │   └── config.ts          # Locale list & types
 │   ├── lib/                    # Shared utilities
+│   │   ├── crypto.ts          # Enkripsi & Dekripsi AES-256-GCM (server-only)
+│   │   ├── obfuscator.ts      # Penyamaran & Deobfuscation ID Sqids
 │   │   ├── dictionaries.ts    # Dictionary loader (server-only)
 │   │   ├── i18n-server.ts     # Cookie-based locale retriever (server-only)
 │   │   ├── i18n-actions.ts    # Server action for changing locale cookie
-│   │   └── seo.ts             # SEO helpers
+│   │   └── seo.ts             # SEO helpers & JSON-LD
 │   ├── dictionaries/           # Translation files
 │   │   ├── id.json            # 🇮🇩 Bahasa Indonesia (default)
 │   │   └── en.json            # 🇺🇸 English
 │   └── proxy.ts                # Pass-through middleware proxy
-├── public/                     # Static assets
+├── public/                     # Static assets & PWA icons
 ├── prompt_ai/                  # AI prompt templates (bukan source code)
 ├── .env                        # Common env (semua environment)
 ├── .env.development            # Dev-only env overrides
 ├── .env.production             # Prod-only env overrides
 ├── .env.example                # Template referensi (committed ke git)
-├── AGENTS.md                   # AI Agent rules (Next.js specific)
+├── AGENTS.md                   # AI Agent rules (Next.js & skill rules)
 ├── GUIDELINE.md                # 📌 File ini — project guidelines
 ├── next.config.ts              # Next.js configuration
 ├── tsconfig.json               # TypeScript config
-├── eslint.config.mjs           # ESLint config
-├── postcss.config.mjs          # PostCSS config (Tailwind)
+├── eslint.config.mjs           # ESLint config (ESLint v9)
+├── postcss.config.mjs          # PostCSS config (Tailwind CSS v4)
 └── package.json
 ```
 
@@ -117,10 +124,10 @@ Init-nextjs-app/
 
 ```typescript
 // ✅ Benar
-import { SomeComponent } from "@/app/_components/some-component";
+import { LanguageSwitcher } from "@/app/_components/language-switcher";
 
 // ❌ Salah
-import { SomeComponent } from "../../../_components/some-component";
+import { LanguageSwitcher } from "../../../_components/language-switcher";
 ```
 
 ### React / Next.js
@@ -185,7 +192,7 @@ import { SomeComponent } from "../../../_components/some-component";
 ## 7. PWA (Progressive Web App)
 
 ### Setup:
-- **Serwist v9** untuk Service Worker
+- **Serwist v9.5.12** untuk Service Worker
 - `src/app/sw.ts` — Service Worker source
 - `src/app/manifest.ts` — Web App Manifest
 - PWA di-disable saat development (`next.config.ts`)
@@ -250,7 +257,6 @@ export default async function Page() {
 - **Gunakan `getCurrentDictionary()`** pada Server Components untuk mengambil `locale` dan `dict`
 - **Dictionary hanya di server** — gunakan `import "server-only"` 
 - **JANGAN** import dictionary di client component — pass translations sebagai props
-
 
 ---
 
@@ -317,6 +323,7 @@ style(ui): adjust header spacing
 | `bun run build`      | Build production bundle (dengan webpack)|
 | `bun start`          | Jalankan production server              |
 | `bun run lint`       | Jalankan ESLint                         |
+| `bun run cli`        | Jalankan CLI helper lokal               |
 | `bun install`        | Install semua dependencies              |
 | `bun add <pkg>`      | Tambah dependency baru                  |
 | `bun add -d <pkg>`   | Tambah dev dependency baru              |
@@ -372,5 +379,4 @@ style(ui): adjust header spacing
 
 ---
 
-> 📅 Last updated: 2026-05-27
-
+> 📅 Last updated: 2026-08-09

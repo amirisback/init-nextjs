@@ -1,8 +1,8 @@
 # 🚀 Init Next.js App — Amir App
 
-Selamat datang di **Amir App**, template Next.js 16 modern berbasis **React 19**, **Tailwind CSS v4.3**, dan **TypeScript 6 (Strict Mode)** dengan dukungan Progressive Web App (PWA) serta integrasi i18n native berkecepatan tinggi. 
+Selamat datang di **Amir App**, template Next.js 16 modern berbasis **React 19**, **Tailwind CSS v4.3**, dan **TypeScript 6 (Strict Mode)** dengan dukungan Progressive Web App (PWA) serta integrasi i18n native berbasis cookie tanpa URL prefix.
 
-Repositori ini telah dioptimalkan secara mendalam menggunakan **Bun** sebagai pengelola paket, konfigurasi **ESLint v9**, serta dilengkapi dengan **ID Security Suite** bawaan untuk pengamanan identitas data Anda.
+Repositori ini dioptimalkan secara mendalam menggunakan **Bun** sebagai pengelola paket, konfigurasi **ESLint v9**, serta dilengkapi dengan **ID Security Suite** bawaan untuk pengamanan identitas data Anda.
 
 ---
 
@@ -20,7 +20,7 @@ graph TD
     ObfHash --> |"Deobfuscate"| SqidsBlock
     
     %% Encryption Path (AES)
-    Decision -- "Enkripsi Kriptografis (AES-256-GCM)" --> ServerAction["app/[lang]/demo-encryption/actions.ts (use server)"]
+    Decision -- "Enkripsi Kriptografis (AES-256-GCM)" --> ServerAction["app/demo-encryption/actions.ts (use server)"]
     ServerAction --> |"Membaca ENCRYPTION_KEY"| AESGCM["lib/crypto.ts (AES-256-GCM)"]
     AESGCM --> |"Encrypt & Sign"| EncToken["Base64 URL-Safe Encrypted Token"]
     EncToken --> |"Decrypt & Verify"| AESGCM
@@ -39,10 +39,10 @@ graph TD
 
 ## ✨ Fitur Utama
 
-1. **Next.js 16.2.6 (App Router)** & **React 19**: Memanfaatkan fitur rendering server tercepat secara bawaan (*Server Components by default*).
-2. **Tailwind CSS v4.3**: Dukungan styling modern berbasis variabel CSS `@theme inline` untuk kecepatan pengembangan optimal.
-3. **Serwist PWA v9.5**: Dukungan service worker luring (*offline-first*) yang tangguh untuk mempermudah distribusi aplikasi seluler progresif.
-4. **Native i18n Dictionaries**: Sistem lokalisasi native berbasis segmentasi rute dinamis `[lang]` dengan performa ekstra cepat tanpa dependensi tambahan yang berat.
+1. **Next.js 16 (App Router)** & **React 19**: Memanfaatkan fitur rendering server terbaru (*Server Components by default*).
+2. **Tailwind CSS v4.3 & Theming**: Styling modern berbasis CSS variables (`@theme inline`) dilengkapi `ThemeSwitcher` (`next-themes`) untuk Dark 🌙, Light ☀️, dan System 💻 mode.
+3. **Serwist PWA v9.5**: Service worker luring (*offline-first*) yang tangguh untuk mendukung Progressive Web Application.
+4. **Cookie-Based Native i18n**: Sistem lokalisasi native berbasis cookie `NEXT_LOCALE` tanpa prefix URL `[lang]`, menjaga URL tetap bersih (`/`, `/demo-encryption`). Mendukung Bahasa Indonesia (default: `id`) dan Inggris (`en`).
 5. **ID Security Suite**:
    * **Sqids Obfuscation**: Mengubah ID integer database (auto-increment) menjadi hash unik ramah URL untuk menyembunyikan detail sensitif database.
    * **AES-256-GCM Cryptography**: Enkripsi dua arah terautentikasi (*tamper-proof*) berbasis server untuk menjaga privasi data sensitif seperti UUID atau string transaksi.
@@ -54,33 +54,48 @@ graph TD
 
 ```
 Init-nextjs-app/
-├── .github/workflows/         # Pipeline CI GitHub Actions
-│   └── ci.yml                 # Alur otomatis Lint & Build
+├── .github/workflows/         # Pipeline CI GitHub Actions (Lint & Build)
 ├── src/                       # 📂 Semua Source Code Utama
-│   ├── app/                   # Next.js App Router (Semua Rute)
-│   │   ├── [lang]/            # Segmentasi Bahasa Dinamis (i18n)
-│   │   │   ├── demo-encryption/# Fitur & Tampilan Demo Keamanan ID
-│   │   │   │   ├── actions.ts # Server Actions (use server)
-│   │   │   │   ├── DemoClient.tsx # Komponen Interaktif Klien
-│   │   │   │   └── page.tsx   # Halaman utama demo (Server Component)
-│   │   │   ├── dictionaries.ts# Pemuat berkas i18n
-│   │   │   ├── layout.tsx     # Layout i18n dengan metadata SEO
-│   │   │   └── page.tsx       # Halaman Utama
+│   ├── app/                   # Next.js App Router
+│   │   ├── _components/       # Komponen UI App-wide (ThemeSwitcher, LanguageSwitcher)
+│   │   ├── demo-encryption/   # Halaman & Komponen Demo Keamanan ID
+│   │   │   ├── actions.ts     # Server Actions (use server)
+│   │   │   ├── DemoClient.tsx # Komponen Interaktif Klien
+│   │   │   └── page.tsx       # Halaman utama demo (Server Component)
+│   │   ├── favicon.ico
 │   │   ├── globals.css        # Pengaturan CSS & Tema Tailwind v4
-│   │   ├── manifest.ts        # Manifest PWA
-│   │   └── sw.ts              # Skrip Service Worker (Serwist)
+│   │   ├── layout.tsx         # Root Layout (ThemeProvider, Metadata SEO)
+│   │   ├── manifest.ts        # Web App Manifest PWA
+│   │   ├── page.tsx           # Halaman Utama (Homepage i18n)
+│   │   ├── providers.tsx      # Provider Wrapper (next-themes ThemeProvider)
+│   │   ├── robots.ts          # Generator robots.txt
+│   │   ├── sitemap.ts         # Generator sitemap.xml
+│   │   └── sw.ts              # Service Worker (Serwist)
 │   ├── dictionaries/          # Berkas Terjemahan Bahasa (JSON)
-│   │   ├── id.json            # Bahasa Indonesia (Bawaan)
+│   │   ├── id.json            # Bahasa Indonesia (Default)
 │   │   └── en.json            # Bahasa Inggris
-│   ├── lib/                   # Utilitas Pendukung Bersama
-│   │   ├── crypto.ts          # Modul enkripsi AES-256-GCM (Server-Only)
-│   │   ├── obfuscator.ts      # Modul penyamaran ID Sqids
-│   │   └── seo.ts             # Utilitas JSON-LD & SEO
-│   └── proxy.ts               # Pendeteksi locale & pengarah otomatis (ganti Middleware)
+│   ├── i18n/                  # Konfigurasi i18n
+│   │   └── config.ts          # Config locale & tipe Locale
+│   ├── lib/                   # Utilitas Pendukung Server & Client
+│   │   ├── crypto.ts          # Enkripsi & Dekripsi AES-256-GCM (Server-Only)
+│   │   ├── dictionaries.ts    # Dictionary loader (Server-Only)
+│   │   ├── i18n-actions.ts    # Server Action pengubah cookie NEXT_LOCALE
+│   │   ├── i18n-server.ts     # Helper retrieval locale & dictionary (Server-Only)
+│   │   ├── obfuscator.ts      # Penyamaran & Pemulihan ID (Sqids)
+│   │   └── seo.ts             # Utilitas JSON-LD & SEO Metadata
+│   └── proxy.ts               # Proxy middleware ringan
+├── public/                    # Aset statis & Ikon PWA
+├── prompt_ai/                 # Prompt AI & panduan instruksi
 ├── .env                       # Variabel environment umum
-├── .env.development            # Konfigurasi dev lokal (tidak di-commit)
-├── .env.production             # Konfigurasi produksi (tanpa rahasia)
-└── package.json               # Dependensi & skrip project
+├── .env.development           # Overrides dev lokal
+├── .env.production            # Overrides produksi (tanpa rahasia)
+├── .env.example               # Template referensi variabel environment
+├── AGENTS.md                  # Aturan khusus AI Agent (Next.js & Skills)
+├── GUIDELINE.md               # 📌 Panduan arsitektur & standar coding proyek
+├── next.config.ts             # Konfigurasi Next.js
+├── tsconfig.json              # Konfigurasi TypeScript Strict
+├── eslint.config.mjs          # Konfigurasi ESLint v9
+└── package.json               # Dependensi & skrip proyek
 ```
 
 ---
@@ -113,6 +128,33 @@ bun run lint
 Verifikasi kelayakan kompilasi proyek Next.js Anda:
 ```bash
 bun run build
+```
+
+---
+
+## 🌐 Panduan Penggunaan i18n (Internationalization)
+
+Pengaturan bahasa menggunakan cookie `NEXT_LOCALE` tanpa mengubah URL path.
+
+### Di Server Component:
+```typescript
+import { getCurrentDictionary } from "@/lib/i18n-server";
+
+export default async function Page() {
+  const { locale, dict } = await getCurrentDictionary();
+
+  return <h1>{dict.home.title}</h1>;
+}
+```
+
+### Di Client Component:
+Gunakan komponen `LanguageSwitcher` dari `@/app/_components/language-switcher`:
+```tsx
+import { LanguageSwitcher } from "@/app/_components/language-switcher";
+
+export function Header() {
+  return <LanguageSwitcher />;
+}
 ```
 
 ---
