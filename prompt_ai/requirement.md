@@ -1,7 +1,6 @@
 ## 🧠 Context
 
-- **Nama Website**
-
+- **Nama Website** Diserahkan ke Ai
 - **Objective:** Membangun website **Warung Kopi Nusantara** — Landing page kedai kopi artisan dengan online ordering.
 - **Project Base:** Repository ini (`Init-nextjs-app`) — sudah ter-setup dengan Next.js 16, Tailwind CSS v4, TypeScript strict, Serwist PWA
 - **Target Audience:** Dewasa
