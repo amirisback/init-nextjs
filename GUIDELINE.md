@@ -165,6 +165,13 @@ import { LanguageSwitcher } from "../../../_components/language-switcher";
 - `<ThemeProvider>` via `next-themes` (`attribute="class"`, `defaultTheme="system"`) untuk pengubahan tema tanpa FOUC
 - Komponen `ThemeSwitcher` (`src/app/_components/theme-switcher.tsx`) untuk memilih tema (Light ☀️, Dark 🌙, System 💻). **Catatan:** Kode dan fungsinya tetap dibuat, namun defaultnya di-hide / gone di UI utama sampai user meminta request show.
 
+### 🎨 Mandatory Skills untuk Styling & UI Design:
+Setiap pengerjaan UI, layout, komponen, dan styling **WAJIB** memanfaatkan & mengombinasikan skill-skill berikut:
+1. **`using-superpowers`** (`.agents/skills/using-superpowers`) — Digunakan sebelum eksekusi untuk memastikan workflow penemuan & pemanggilan skill dilakukan secara terstruktur.
+2. **`hallmark`** (`.agents/skills/hallmark`) — Anti-AI-slop design skill untuk variasi struktur UI/layout, komponen 8-state, microinteractions, responsivitas mobile-first, dan kualitas visual premium.
+3. **`ui-ux-pro-max`** (`.agents/skills/ui-ux-pro-max`) — Design intelligence & guidelines untuk pemilihan color palette, typography pairing, standar aksesibilitas (WCAG/contrast), touch targets, dan UX pre-delivery checklist.
+4. **`tailwind-design-system`** (`.agents/skills/tailwind-design-system`) — Membangun design tokens, variasi komponen, pola responsif, dan pengorganisasian Tailwind CSS v4 secara sistematis dan terstandar.
+
 ### Aturan:
 - **Gunakan Tailwind classes** — Hindari inline style
 - **Gunakan CSS variables** di `@theme inline` untuk custom values
@@ -362,6 +369,7 @@ style(ui): adjust header spacing
 12. **Gunakan Flat Routing + SearchParams** saat membutuhkan ID atau state dari halaman/segmen sebelumnya.
 13. **⚠️ WAJIB HAPUS rute demo (`app/demo-encryption/`)** saat mulai pengerjaan web riil agar rute demo ini tidak masuk ke build produksi.
 14. **Default Hide/Gone Theme & Language Switcher** — Kode dan fungsi `ThemeSwitcher` dan `LanguageSwitcher` tetap dibuat dan disiapkan, tetapi defaultnya di-hide / gone di UI utama sampai user meminta request show.
+15. **Wajib Gunakan Skills Styling** — Untuk setiap pengerjaan UI, layout, dan CSS styling, AI agent HARUS meng-invoke dan mematuhi aturan dari **`using-superpowers`**, **`hallmark`**, **`ui-ux-pro-max`**, dan **`tailwind-design-system`**.
 
 ### ❌ JANGAN:
 1. **JANGAN** menggunakan `pages/` directory
