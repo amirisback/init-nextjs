@@ -1,9 +1,11 @@
 ## 🧠 Context
 
+- **Nama Website**
+
+- **Objective:** Membangun website **Warung Kopi Nusantara** — Landing page kedai kopi artisan dengan online ordering.
 - **Project Base:** Repository ini (`Init-nextjs-app`) — sudah ter-setup dengan Next.js 16, Tailwind CSS v4, TypeScript strict, Serwist PWA
-- **Target Audience:** [Siapa pengguna website ini]
-- **Tujuan Bisnis:** [Apa tujuan utama website ini]
-- **Referensi Desain:** [URL / nama website referensi, jika ada]
+- **Target Audience:** Dewasa
+- **Tujuan Bisnis:** Menjangkau pasar, memperkenalkan produk dan brand, memudahkan pelanggan melakukan pemesanan.
 
 ## 📋 Requirements
 
@@ -14,16 +16,12 @@
 3. **[Halaman 3]** (`/path`) — [Deskripsi]
 
 ### Fitur Utama
-
-- [ ] [Fitur 1, misal: Dark mode toggle]
-- [ ] [Fitur 2, misal: Contact form dengan validasi]
-- [ ] [Fitur 3, misal: Responsive image gallery]
-- [ ] [Fitur 4, misal: WhatsApp integration]
+- [ ] 
 
 ### Desain & UI
 
-- **Style:** [Modern/Minimalis/Glassmorphism/Corporate/dll]
-- **Color Palette:** [Warna utama, misal: Biru navy + putih, atau serahkan ke AI]
+- **Style:** [Modern/Minimalis/Glassmorphism/Corporate/dll] Serahkan ke AI sesuaikan dengan Thema Website
+- **Color Palette:** Serahkan ke AI sesuaikan dengan Thema Website
 - **Typography:** [Gunakan Geist (sudah setup) / font lain dari Google Fonts]
 - **Layout:** Mobile-first, responsive
 - **Dark Mode:** Wajib support

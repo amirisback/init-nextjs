@@ -163,7 +163,7 @@ import { LanguageSwitcher } from "../../../_components/language-switcher";
   - `--background`, `--foreground`, `--card`, `--primary`, `--secondary`, `--muted`, `--accent`, `--border`, `--ring`, dll.
 - `@theme inline` block untuk memetakan token ke class Tailwind (`bg-background`, `text-foreground`, `bg-primary`, `border-border`, dll.)
 - `<ThemeProvider>` via `next-themes` (`attribute="class"`, `defaultTheme="system"`) untuk pengubahan tema tanpa FOUC
-- Komponen `ThemeSwitcher` (`src/app/_components/theme-switcher.tsx`) untuk memilih tema (Light ☀️, Dark 🌙, System 💻)
+- Komponen `ThemeSwitcher` (`src/app/_components/theme-switcher.tsx`) untuk memilih tema (Light ☀️, Dark 🌙, System 💻). **Catatan:** Kode dan fungsinya tetap dibuat, namun defaultnya di-hide / gone di UI utama sampai user meminta request show.
 
 ### Aturan:
 - **Gunakan Tailwind classes** — Hindari inline style
@@ -212,7 +212,7 @@ Project ini menggunakan **Cookie & Localization-based i18n** tanpa meletakkan lo
 - **Tanpa prefix routing (`[lang]`)** — URL tetap bersih (`/`, `/about`, `/demo-encryption`).
 - **Cookie `NEXT_LOCALE`** — Menyimpan preferensi bahasa pengguna (`id` atau `en`).
 - **`i18n-server.ts`** — Helper server-side untuk membaca cookie `NEXT_LOCALE` dan memuat dictionary terkait.
-- **`LanguageSwitcher`** — Komponen UI client untuk mengubah bahasa via Server Action `setLocaleAction()`.
+- **`LanguageSwitcher`** — Komponen UI client untuk mengubah bahasa via Server Action `setLocaleAction()`. **Catatan:** Kode dan fungsinya tetap dibuat, namun defaultnya di-hide / gone di UI utama sampai user meminta request show.
 
 ### Locales:
 | Locale | Bahasa              | Default |
@@ -361,6 +361,7 @@ style(ui): adjust header spacing
 11. **Gunakan `next/image`** (`Image` component dari `next/image`) untuk semua gambar di component React/Next.js
 12. **Gunakan Flat Routing + SearchParams** saat membutuhkan ID atau state dari halaman/segmen sebelumnya.
 13. **⚠️ WAJIB HAPUS rute demo (`app/demo-encryption/`)** saat mulai pengerjaan web riil agar rute demo ini tidak masuk ke build produksi.
+14. **Default Hide/Gone Theme & Language Switcher** — Kode dan fungsi `ThemeSwitcher` dan `LanguageSwitcher` tetap dibuat dan disiapkan, tetapi defaultnya di-hide / gone di UI utama sampai user meminta request show.
 
 ### ❌ JANGAN:
 1. **JANGAN** menggunakan `pages/` directory
@@ -376,7 +377,8 @@ style(ui): adjust header spacing
 11. **JANGAN** menggunakan tag HTML `<img>` biasa di component React/Next.js — selalu gunakan `next/image` untuk optimasi performa dan SEO
 12. **JANGAN menggunakan Nested Dynamic Routes** yang terlalu dalam.
 13. **JANGAN menggunakan Shared Layout & React Context** untuk sekadar membagikan parameter routing antar halaman.
+14. **JANGAN** menampilkan `ThemeSwitcher` dan `LanguageSwitcher` di UI utama secara default tanpa permintaan eksplisit dari user (tetap jaga kodenya agar siap digunakan kapan saja).
 
 ---
 
-> 📅 Last updated: 2026-08-09
+> 📅 Last updated: 2026-08-13
