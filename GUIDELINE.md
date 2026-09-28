@@ -9,14 +9,14 @@
 | Key            | Value                                    |
 | -------------- | ---------------------------------------- |
 | **App Name**   | Amir App                                 |
-| **Framework**  | Next.js 16.3.0 (App Router)              |
-| **React**      | React 19.2.8                             |
+| **Framework**  | Next.js 16.3.6 (App Router)              |
+| **React**      | React 19.3.0                             |
 | **Language**   | TypeScript 6.0.3 (Strict Mode)           |
 | **Styling**    | Tailwind CSS v4.3.3                      |
 | **PWA**        | Serwist v9.5.12                          |
-| **Linting**    | ESLint v9.21.0 + eslint-config-next 16.3.0|
+| **Linting**    | ESLint v9.39.5 + eslint-config-next 16.3.6|
 | **Node**       | ≥ 18                                     |
-| **Package Mgr**| Bun v1.3.14                              |
+| **Package Mgr**| Bun v1.4.2                               |
 
 ---
 
@@ -389,4 +389,4 @@ style(ui): adjust header spacing
 
 ---
 
-> 📅 Last updated: 2026-08-13
+> 📅 Last updated: 2026-09-28
