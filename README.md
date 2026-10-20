@@ -86,10 +86,7 @@ Init-nextjs-app/
 │   └── proxy.ts               # Proxy middleware ringan
 ├── public/                    # Aset statis & Ikon PWA
 ├── prompt_ai/                 # Prompt AI & panduan instruksi
-├── .env                       # Variabel environment umum
-├── .env.development           # Overrides dev lokal
-├── .env.production            # Overrides produksi (tanpa rahasia)
-├── .env.example               # Template referensi variabel environment
+├── .env                       # File variabel environment tunggal (.env saja)
 ├── AGENTS.md                  # Aturan khusus AI Agent (Next.js & Skills)
 ├── GUIDELINE.md               # 📌 Panduan arsitektur & standar coding proyek
 ├── next.config.ts             # Konfigurasi Next.js
@@ -198,12 +195,7 @@ console.log(plainText); // Output: "user-1234-uuid-secret"
 
 ## 🚀 Konfigurasi Environment Variables
 
-Template ini menggunakan sistem prioritas variabel lingkungan bawaan Next.js. Rahasia kriptografi diatur **tanpa** awalan `NEXT_PUBLIC_` untuk memastikan keamanan penuh di sisi server.
-
-Salin berkas template `.env.example` menjadi `.env.local` untuk konfigurasi lokal Anda:
-```bash
-cp .env.example .env.local
-```
+Proyek ini menggunakan **1 berkas `.env` tunggal** tanpa berkas `.env` lainnya (`.env.local`, `.env.development`, `.env.production`, maupun `.env.example`). Seluruh konfigurasi aplikasi dan rahasia server disatukan di dalam `.env`. Rahasia kriptografi diatur **tanpa** awalan `NEXT_PUBLIC_` untuk memastikan keamanan penuh di sisi server.
 
 ### Variabel Utama:
 * `ENCRYPTION_KEY`: Kunci rahasia berukuran **tepat 32 karakter** (256-bit) yang digunakan oleh modul AES-GCM.

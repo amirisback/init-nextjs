@@ -3,13 +3,19 @@
 import { obfuscateId, deobfuscateId } from "@/lib/obfuscator";
 import { encrypt, decrypt } from "@/lib/crypto";
 
+export interface ActionResult<T = string> {
+  success: boolean;
+  result?: T;
+  error?: string;
+}
+
 /**
  * Server Action to safely obfuscate an integer ID on the server.
  * Keeps the Sqids configuration and alphabet hidden from the client bundle.
  */
-export async function obfuscateAction(id: number): Promise<{ success: boolean; result?: string; error?: string }> {
+export async function obfuscateAction(id: number): Promise<ActionResult<string>> {
   try {
-    if (!Number.isInteger(id) || id < 0) {
+    if (!Number.isInteger(id) || !Number.isSafeInteger(id) || id < 0) {
       return { success: false, error: "Only non-negative integers can be obfuscated." };
     }
     const hash = obfuscateId(id);
@@ -22,7 +28,7 @@ export async function obfuscateAction(id: number): Promise<{ success: boolean; r
 /**
  * Server Action to safely deobfuscate a Sqids hash on the server.
  */
-export async function deobfuscateAction(hash: string): Promise<{ success: boolean; result?: number; error?: string }> {
+export async function deobfuscateAction(hash: string): Promise<ActionResult<number>> {
   try {
     if (!hash || typeof hash !== "string") {
       return { success: false, error: "Hash string is required." };
@@ -40,7 +46,7 @@ export async function deobfuscateAction(hash: string): Promise<{ success: boolea
 /**
  * Server Action to encrypt sensitive text using AES-256-GCM.
  */
-export async function encryptAction(text: string): Promise<{ success: boolean; result?: string; error?: string }> {
+export async function encryptAction(text: string): Promise<ActionResult<string>> {
   try {
     if (!text) {
       return { success: false, error: "Text to encrypt cannot be empty." };
@@ -55,14 +61,17 @@ export async function encryptAction(text: string): Promise<{ success: boolean; r
 /**
  * Server Action to decrypt AES-256-GCM encrypted text.
  */
-export async function decryptAction(encryptedText: string): Promise<{ success: boolean; result?: string; error?: string }> {
+export async function decryptAction(encryptedText: string): Promise<ActionResult<string>> {
   try {
     if (!encryptedText) {
       return { success: false, error: "Encrypted text cannot be empty." };
     }
     const decrypted = decrypt(encryptedText.trim());
     if (decrypted === null) {
-      return { success: false, error: "Decryption failed. The data may be tampered with, expired, or encrypted with a different key." };
+      return {
+        success: false,
+        error: "Decryption failed. The data may be tampered with, expired, or encrypted with a different key.",
+      };
     }
     return { success: true, result: decrypted };
   } catch {

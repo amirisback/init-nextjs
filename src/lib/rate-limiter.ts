@@ -25,7 +25,7 @@ function cleanupOldEntries(): void {
   lastCleanup = now;
 
   for (const [key, timestamps] of requestLogs.entries()) {
-    const valid = timestamps.filter((t) => now - t < 5 * 60 * 1000);
+    const valid = timestamps.filter((t) => now - t < CLEANUP_INTERVAL_MS);
     if (valid.length === 0) {
       requestLogs.delete(key);
     } else {
@@ -45,9 +45,9 @@ export function resetRateLimitStore(): void {
  * Extracts client IP from request headers.
  */
 export function getClientIp(headers: Headers): string {
-  const cfConnectingIp = headers.get("cf-connecting-ip");
+  const cfConnectingIp = headers.get("cf-connecting-ip")?.trim();
   if (cfConnectingIp) {
-    return cfConnectingIp.trim();
+    return cfConnectingIp;
   }
 
   const xForwardedFor = headers.get("x-forwarded-for");
@@ -56,9 +56,9 @@ export function getClientIp(headers: Headers): string {
     if (firstIp) return firstIp;
   }
 
-  const xRealIp = headers.get("x-real-ip");
+  const xRealIp = headers.get("x-real-ip")?.trim();
   if (xRealIp) {
-    return xRealIp.trim();
+    return xRealIp;
   }
 
   return "127.0.0.1";

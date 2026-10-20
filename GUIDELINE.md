@@ -71,10 +71,7 @@ Init-nextjs-app/
 │   └── proxy.ts                # Pass-through middleware proxy
 ├── public/                     # Static assets & PWA icons
 ├── prompt_ai/                  # AI prompt templates (bukan source code)
-├── .env                        # Common env (semua environment)
-├── .env.development            # Dev-only env overrides
-├── .env.production             # Prod-only env overrides
-├── .env.example                # Template referensi (committed ke git)
+├── .env                        # Single env file untuk seluruh konfigurasi (tanpa .env lain)
 ├── AGENTS.md                   # AI Agent rules (Next.js & skill rules)
 ├── GUIDELINE.md                # 📌 File ini — project guidelines
 ├── next.config.ts              # Next.js configuration
@@ -95,22 +92,18 @@ Init-nextjs-app/
 
 ## 4. Environment Variables
 
-### File Priority (urutan loading Next.js):
-1. `.env` — Base/common (selalu di-load)
-2. `.env.development` — Override untuk `NODE_ENV=development`
-3. `.env.production` — Override untuk `NODE_ENV=production`
-4. `.env.local` — Override tertinggi, TIDAK committed
+> **Prinsip Utama:** Proyek ini **HANYA menggunakan 1 file `.env`** tunggal untuk seluruh environment. Tidak menggunakan `.env.development`, `.env.production`, `.env.local`, atau `.env.example`.
 
 ### Aturan Naming:
 | Prefix              | Accessible di          | Contoh                          |
 | ------------------- | ---------------------- | ------------------------------- |
 | `NEXT_PUBLIC_`      | Client + Server        | `NEXT_PUBLIC_APP_URL`           |
-| Tanpa prefix        | **Server ONLY**        | `DATABASE_URL`, `AUTH_SECRET`   |
+| Tanpa prefix        | **Server ONLY**        | `DATABASE_URL`, `AUTH_SECRET`, `ENCRYPTION_KEY` |
 
 ### ⚠️ JANGAN PERNAH:
-- Menyimpan secret/key di file dengan prefix `NEXT_PUBLIC_`
+- Menyimpan secret/key di variabel dengan prefix `NEXT_PUBLIC_`
 - Hardcode URL atau API key langsung di source code
-- Commit `.env.local` ke git
+- Menambahkan file `.env` lain (`.env.local`, `.env.development`, `.env.production`, `.env.example`, dll)
 
 ---
 
@@ -311,14 +304,11 @@ style(ui): adjust header spacing
 ### Yang TIDAK boleh di-commit:
 - `node_modules/`
 - `.next/`
-- `.env.local`
+- File environment tambahan (`.env.local`, `.env.development`, dll)
 - File temporary / scratch
 
 ### Yang BOLEH di-commit:
-- `.env` (common, tanpa secrets)
-- `.env.development` (tanpa secrets)
-- `.env.production` (tanpa secrets — secrets via hosting platform)
-- `.env.example` (template referensi)
+- `.env` (file env tunggal)
 
 ---
 
@@ -347,7 +337,7 @@ style(ui): adjust header spacing
 - [ ] Semua halaman punya metadata (title, description)
 - [ ] Dark mode berfungsi dengan baik
 - [ ] Responsive di mobile dan desktop
-- [ ] Environment variables baru sudah ditambahkan ke `.env.example`
+- [ ] Environment variables baru sudah ditambahkan ke `.env`
 - [ ] Translation tersedia di semua locale (`id.json` & `en.json`)
 
 ---
@@ -362,7 +352,7 @@ style(ui): adjust header spacing
 5. **Support dark mode** di semua UI yang dibuat
 6. **Gunakan Server Components** sebagai default
 7. **Tambahkan metadata** di setiap halaman baru
-8. **Update `.env.example`** jika menambah env variable baru
+8. **Update `.env`** jika menambah env variable baru (tanpa membuat file .env lain)
 9. **Tambahkan translations** di kedua locale file (`id.json` & `en.json`)
 10. **Gunakan `getCurrentDictionary()`** dari `@/lib/i18n-server` di Server Component
 11. **Gunakan `next/image`** (`Image` component dari `next/image`) untuk semua gambar di component React/Next.js

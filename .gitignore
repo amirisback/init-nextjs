@@ -43,3 +43,10 @@ next-env.d.ts
 
 # Webstorm
 .idea
+
+
+# environment files (only .env is used)
+.env*.local
+.env.development*
+.env.production*
+.env.example

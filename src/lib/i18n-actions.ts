@@ -5,7 +5,7 @@ import { COOKIE_NAME } from "./i18n-server";
 import { hasLocale } from "./dictionaries";
 import type { Locale } from "@/i18n/config";
 
-export async function setLocaleAction(locale: Locale) {
+export async function setLocaleAction(locale: Locale): Promise<void> {
   if (!hasLocale(locale)) {
     throw new Error(`Invalid locale: ${locale}`);
   }

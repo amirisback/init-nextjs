@@ -15,14 +15,14 @@ const sqids = new Sqids({
  * 
  * @param id A single number or array of numbers to obfuscate
  * @returns An obfuscated string (e.g., "8g9a5k")
- * @throws Error if input contains negative numbers
+ * @throws Error if input contains negative numbers or is empty
  */
 export function obfuscateId(id: number | number[]): string {
   try {
     const ids = Array.isArray(id) ? id : [id];
     
     // Sqids only supports non-negative integers
-    if (ids.some((val) => val < 0 || !Number.isInteger(val))) {
+    if (ids.length === 0 || ids.some((val) => val < 0 || !Number.isInteger(val))) {
       throw new Error("Sqids only supports non-negative integers.");
     }
     
@@ -37,15 +37,14 @@ export function obfuscateId(id: number | number[]): string {
  * Deobfuscates a Sqids string back into its original positive integer ID (or array of integers).
  * 
  * @param hash The obfuscated string to decode
- * @returns The original number ID, an array of number IDs, or null if the hash is invalid
+ * @returns The original number ID, or null if the hash is invalid
  */
 export function deobfuscateId(hash: string): number | null {
   try {
     if (!hash || typeof hash !== "string") return null;
     
-    const result = sqids.decode(hash);
-    
-    if (result.length === 0) {
+    const result = sqids.decode(hash.trim());
+    if (result.length === 0 || result[0] === undefined) {
       return null;
     }
     
@@ -65,7 +64,7 @@ export function deobfuscateId(hash: string): number | null {
 export function deobfuscateIds(hash: string): number[] {
   try {
     if (!hash || typeof hash !== "string") return [];
-    return sqids.decode(hash);
+    return sqids.decode(hash.trim());
   } catch (error) {
     console.error("[Deobfuscate IDs Error]:", error);
     return [];

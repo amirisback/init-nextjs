@@ -1,4 +1,5 @@
 import { parseArgs } from "node:util";
+import { pathToFileURL } from "node:url";
 import { helloCommand } from "./commands/hello";
 
 const args = process.argv.slice(2);
@@ -14,7 +15,7 @@ const options = {
   },
 } as const;
 
-export async function runCli(argsArray: string[]) {
+export async function runCli(argsArray: string[]): Promise<void> {
   try {
     const { values, positionals } = parseArgs({
       args: argsArray,
@@ -48,7 +49,7 @@ export async function runCli(argsArray: string[]) {
   }
 }
 
-function showHelp() {
+function showHelp(): void {
   console.log(`
 Amir App CLI
 
@@ -65,15 +66,13 @@ Options:
   `);
 }
 
-import { pathToFileURL } from "node:url";
-
 // Only run if called directly and not in test environment
 if (process.env.NODE_ENV !== "test" && process.argv[1]) {
   try {
     if (import.meta.url === pathToFileURL(process.argv[1]).href) {
       runCli(args);
     }
-  } catch (e) {
+  } catch {
     // Ignore invalid URLs
   }
 }

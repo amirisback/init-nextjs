@@ -12,7 +12,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This file contains:
 - Project architecture & folder structure conventions
 - Coding standards (TypeScript, React, Tailwind CSS v4)
-- Environment variable rules (`.env`, `.env.development`, `.env.production`)
+- Environment variable rules (hanya `.env` tunggal)
 - PWA (Serwist) configuration guidelines
 - SEO & performance requirements
 - Git conventions

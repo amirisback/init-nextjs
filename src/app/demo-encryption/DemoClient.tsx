@@ -72,9 +72,14 @@ export default function DemoClient({ dict, common }: DemoClientProps) {
 
   // 1. Sqids Obfuscate
   const handleSqidObfuscate = async () => {
-    if (!sqidInput.trim()) return;
-    const num = parseInt(sqidInput, 10);
-    if (isNaN(num) || num < 0) {
+    const trimmed = sqidInput.trim();
+    if (!trimmed) return;
+    if (!/^\d+$/.test(trimmed)) {
+      setSqidResult({ success: false, error: dict.errorInvalidNumber });
+      return;
+    }
+    const num = Number(trimmed);
+    if (!Number.isSafeInteger(num) || num < 0) {
       setSqidResult({ success: false, error: dict.errorInvalidNumber });
       return;
     }
@@ -87,7 +92,7 @@ export default function DemoClient({ dict, common }: DemoClientProps) {
       setSqidResult({
         success: true,
         type: "encode",
-        original: sqidInput,
+        original: trimmed,
         processed: res.result,
       });
     } else {
@@ -97,17 +102,18 @@ export default function DemoClient({ dict, common }: DemoClientProps) {
 
   // 2. Sqids Deobfuscate
   const handleSqidDeobfuscate = async () => {
-    if (!sqidInput.trim()) return;
+    const trimmed = sqidInput.trim();
+    if (!trimmed) return;
 
     setSqidLoading(true);
-    const res = await deobfuscateAction(sqidInput.trim());
+    const res = await deobfuscateAction(trimmed);
     setSqidLoading(false);
 
     if (res.success && res.result !== undefined) {
       setSqidResult({
         success: true,
         type: "decode",
-        original: sqidInput,
+        original: trimmed,
         processed: res.result.toString(),
       });
     } else {
@@ -117,20 +123,21 @@ export default function DemoClient({ dict, common }: DemoClientProps) {
 
   // 3. AES Encrypt
   const handleAesEncrypt = async () => {
-    if (!aesInput.trim()) {
+    const trimmed = aesInput.trim();
+    if (!trimmed) {
       setAesResult({ success: false, error: dict.errorEmptyText });
       return;
     }
 
     setAesLoading(true);
-    const res = await encryptAction(aesInput);
+    const res = await encryptAction(trimmed);
     setAesLoading(false);
 
     if (res.success && res.result) {
       setAesResult({
         success: true,
         type: "encrypt",
-        original: aesInput,
+        original: trimmed,
         processed: res.result,
       });
     } else {
@@ -140,20 +147,21 @@ export default function DemoClient({ dict, common }: DemoClientProps) {
 
   // 4. AES Decrypt
   const handleAesDecrypt = async () => {
-    if (!aesInput.trim()) {
+    const trimmed = aesInput.trim();
+    if (!trimmed) {
       setAesResult({ success: false, error: dict.errorEmptyText });
       return;
     }
 
     setAesLoading(true);
-    const res = await decryptAction(aesInput);
+    const res = await decryptAction(trimmed);
     setAesLoading(false);
 
     if (res.success && res.result) {
       setAesResult({
         success: true,
         type: "decrypt",
-        original: aesInput,
+        original: trimmed,
         processed: res.result,
       });
     } else {

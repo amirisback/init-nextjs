@@ -5,8 +5,9 @@ import type { Metadata } from "next";
 import type { Locale } from "@/i18n/config";
 import { i18n } from "@/i18n/config";
 
-// Base URL for the site — update in .env for production
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+// Base URL for the site — update in .env for production (trailing slashes stripped)
+const rawSiteUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const SITE_URL = rawSiteUrl.replace(/\/+$/, "");
 const SITE_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Amir App";
 
 export const seoConfig = {
@@ -16,13 +17,17 @@ export const seoConfig = {
   locales: i18n.locales,
 } as const;
 
+export interface AlternatesResult {
+  canonical: string;
+}
+
 /**
  * Generate canonical URL
  */
-export function generateAlternates(pathname: string) {
+export function generateAlternates(pathname: string): AlternatesResult {
   const cleanPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
   return {
-    canonical: `${seoConfig.siteUrl}${cleanPath}`,
+    canonical: `${seoConfig.siteUrl}${cleanPath === "/" ? "" : cleanPath}`,
   };
 }
 
@@ -52,7 +57,7 @@ export function generateOgMetadata({
       .filter((l) => l !== locale)
       .map((l) => (l === "id" ? "id_ID" : "en_US")),
     type: "website",
-    url: `${seoConfig.siteUrl}${cleanPath}`,
+    url: `${seoConfig.siteUrl}${cleanPath === "/" ? "" : cleanPath}`,
     images: images ?? [
       {
         url: `${seoConfig.siteUrl}/og-image.png`,
@@ -87,7 +92,7 @@ export function generateTwitterMetadata({
 /**
  * Generate JSON-LD structured data for a WebSite
  */
-export function generateWebsiteJsonLd(locale: Locale) {
+export function generateWebsiteJsonLd(locale: Locale): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -108,7 +113,7 @@ export function generateWebsiteJsonLd(locale: Locale) {
 /**
  * Generate JSON-LD structured data for an Organization
  */
-export function generateOrganizationJsonLd() {
+export function generateOrganizationJsonLd(): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",

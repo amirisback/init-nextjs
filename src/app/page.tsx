@@ -2,8 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCurrentDictionary } from "@/lib/i18n-server";
 import { generateWebsiteJsonLd } from "@/lib/seo";
-// import { LanguageSwitcher } from "./_components/language-switcher";
-// import { ThemeSwitcher } from "./_components/theme-switcher";
 
 export default async function Home() {
   const { locale, dict } = await getCurrentDictionary();
@@ -24,10 +22,6 @@ export default async function Home() {
           {dict.common.appName}
         </div>
         {/* Switchers disiapkan tetapi default di-hide/gone sampai ada request show dari user */}
-        {/* <div className="flex items-center gap-3">
-          <ThemeSwitcher labels={dict.theme} />
-          <LanguageSwitcher currentLocale={locale} />
-        </div> */}
       </header>
 
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-24 px-8 sm:px-16 bg-white dark:bg-black sm:items-start">

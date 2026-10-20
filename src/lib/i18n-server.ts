@@ -1,7 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { i18n, type Locale } from "@/i18n/config";
-import { getDictionary, hasLocale } from "@/lib/dictionaries";
+import { getDictionary, hasLocale, type Dictionary } from "@/lib/dictionaries";
 
 export const COOKIE_NAME = "NEXT_LOCALE";
 
@@ -16,7 +16,7 @@ export async function getCurrentLocale(): Promise<Locale> {
   return i18n.defaultLocale;
 }
 
-export async function getCurrentDictionary() {
+export async function getCurrentDictionary(): Promise<{ locale: Locale; dict: Dictionary }> {
   const locale = await getCurrentLocale();
   const dict = await getDictionary(locale);
   return { locale, dict };
