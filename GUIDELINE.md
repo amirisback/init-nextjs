@@ -13,10 +13,11 @@
 | **React**      | React 19.3.0                             |
 | **Language**   | TypeScript 6.0.3 (Strict Mode)           |
 | **Styling**    | Tailwind CSS v4.3.3                      |
-| **PWA**        | Serwist v9.5.12                          |
+| **PWA**        | Serwist v9.5.13                          |
+| **Testing**    | Vitest v5.0.5 + Bun Test                 |
 | **Linting**    | ESLint v9.39.5 + eslint-config-next 16.3.6|
 | **Node**       | ≥ 18                                     |
-| **Package Mgr**| Bun v1.4.2                               |
+| **Package Mgr**| Bun v1.4.4                               |
 
 ---
 
@@ -64,16 +65,23 @@ Init-nextjs-app/
 │   │   ├── dictionaries.ts    # Dictionary loader (server-only)
 │   │   ├── i18n-server.ts     # Cookie-based locale retriever (server-only)
 │   │   ├── i18n-actions.ts    # Server action for changing locale cookie
-│   │   └── seo.ts             # SEO helpers & JSON-LD
+│   │   ├── rate-limiter.ts    # In-memory IP rate limiter & route tiering
+│   │   ├── security-guards.ts # Probe, path traversal & malicious bot detectors
+│   │   ├── seo.ts             # SEO helpers & JSON-LD
+│   │   └── __tests__/         # Unit test suites (crypto, i18n, obfuscator, proxy, seo)
 │   ├── dictionaries/           # Translation files
 │   │   ├── id.json            # 🇮🇩 Bahasa Indonesia (default)
 │   │   └── en.json            # 🇺🇸 English
 │   └── proxy.ts                # Pass-through middleware proxy
+├── cli/                        # CLI helper tools (bun run cli)
+├── e2e/                        # End-to-end integration test suite (bun test:e2e)
 ├── public/                     # Static assets & PWA icons
 ├── prompt_ai/                  # AI prompt templates (bukan source code)
 ├── .env                        # Single env file untuk seluruh konfigurasi (tanpa .env lain)
 ├── AGENTS.md                   # AI Agent rules (Next.js & skill rules)
 ├── GUIDELINE.md                # 📌 File ini — project guidelines
+├── bunfig.toml                 # Bun test runner config (preload mocks)
+├── test-setup.ts               # Test mocks setup (server-only, next/headers)
 ├── next.config.ts              # Next.js configuration
 ├── tsconfig.json               # TypeScript config
 ├── eslint.config.mjs           # ESLint config (ESLint v9)
@@ -192,7 +200,7 @@ Setiap pengerjaan UI, layout, komponen, dan styling **WAJIB** memanfaatkan & men
 ## 7. PWA (Progressive Web App)
 
 ### Setup:
-- **Serwist v9.5.12** untuk Service Worker
+- **Serwist v9.5.13** untuk Service Worker
 - `src/app/sw.ts` — Service Worker source
 - `src/app/manifest.ts` — Web App Manifest
 - PWA di-disable saat development (`next.config.ts`)
@@ -320,6 +328,8 @@ style(ui): adjust header spacing
 | `bun run build`      | Build production bundle (dengan webpack)|
 | `bun start`          | Jalankan production server              |
 | `bun run lint`       | Jalankan ESLint                         |
+| `bun test`           | Jalankan semua unit & integration tests |
+| `bun test:e2e`       | Jalankan end-to-end workflow tests      |
 | `bun run cli`        | Jalankan CLI helper lokal               |
 | `bun install`        | Install semua dependencies              |
 | `bun add <pkg>`      | Tambah dependency baru                  |
@@ -333,6 +343,7 @@ style(ui): adjust header spacing
 
 - [ ] `bun run lint` — Tidak ada error
 - [ ] `bun run build` — Build sukses tanpa error
+- [ ] `bun test` — Semua unit & E2E tests lulus tanpa error
 - [ ] Tidak ada `console.log` yang tertinggal (gunakan `LOG_LEVEL`)
 - [ ] Semua halaman punya metadata (title, description)
 - [ ] Dark mode berfungsi dengan baik
@@ -360,6 +371,7 @@ style(ui): adjust header spacing
 13. **⚠️ WAJIB HAPUS rute demo (`app/demo-encryption/`)** saat mulai pengerjaan web riil agar rute demo ini tidak masuk ke build produksi.
 14. **Default Hide/Gone Theme & Language Switcher** — Kode dan fungsi `ThemeSwitcher` dan `LanguageSwitcher` tetap dibuat dan disiapkan, tetapi defaultnya di-hide / gone di UI utama sampai user meminta request show.
 15. **Wajib Gunakan Skills Styling** — Untuk setiap pengerjaan UI, layout, dan CSS styling, AI agent HARUS meng-invoke dan mematuhi aturan dari **`using-superpowers`**, **`hallmark`**, **`ui-ux-pro-max`**, dan **`tailwind-design-system`**.
+16. **Verifikasi Tests & Kualitas Kode** — Selalu jalankan `bun test`, `bun run lint`, dan `bun run build` untuk menjamin seluruh fungsionalitas dan routing lulus verifikasi.
 
 ### ❌ JANGAN:
 1. **JANGAN** menggunakan `pages/` directory
@@ -379,4 +391,4 @@ style(ui): adjust header spacing
 
 ---
 
-> 📅 Last updated: 2026-09-28
+> 📅 Last updated: 2026-10-26
